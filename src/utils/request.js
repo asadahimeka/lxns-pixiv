@@ -6,17 +6,17 @@ const request = axios.create({
   headers: { 'Content-Type': 'application/json' },
 })
 
-request.interceptors.request.use((config) => {
+request.interceptors.request.use(config => {
   return config
 })
 
 request.interceptors.response.use(
-  (res) => {
+  res => {
     return res
   },
-  (err) => {
+  err => {
     return Promise.reject(err)
-  },
+  }
 )
 
 export default request

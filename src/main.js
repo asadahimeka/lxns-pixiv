@@ -1,5 +1,5 @@
-import 'vuetify/dist/vuetify.min.css'
-import '@mdi/font/css/materialdesignicons.css'
+// import 'vuetify/dist/vuetify.min.css'
+// import '@mdi/font/css/materialdesignicons.css'
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import Vuetify from 'vuetify'
@@ -21,19 +21,16 @@ Vue.use(VueMasonry)
 let language = 'en'
 if (localStorage.getItem('locale') !== null) {
   language = localStorage.getItem('locale')
-}
-else {
-  if (navigator.language === 'zh-CN')
+} else {
+  if (navigator.language === 'zh-CN') {
     localStorage.setItem('locale', 'zhHans')
-
-  else if (navigator.language === 'zh-TW')
+  } else if (navigator.language === 'zh-TW') {
     localStorage.setItem('locale', 'zhHant')
-
-  else if (navigator.language === 'ja-JP')
+  } else if (navigator.language === 'ja-JP') {
     localStorage.setItem('locale', 'ja')
-
-  else
+  } else {
     localStorage.setItem('locale', 'en')
+  }
 }
 language = localStorage.getItem('locale')
 
@@ -47,8 +44,7 @@ new Vue({
       : false,
   }),
   mounted() {
-    if (localStorage.getItem('darkMode') === 'true')
-      this.$vuetify.theme.dark = true
+    if (localStorage.getItem('darkMode') === 'true') { this.$vuetify.theme.dark = true }
   },
   render: h => h(App),
   vuetify: new Vuetify({
@@ -64,7 +60,20 @@ new Vue({
     },
     */
     icons: {
-      iconfont: 'mdi',
+      iconfont: 'mdiSvg',
+    },
+    theme: {
+      dark: false,
+      themes: {
+        light: {
+          primary: '#8E24AA',
+          accent: '#EC407A',
+        },
+        dark: {
+          primary: '#BA68C8',
+          accent: '#FF80AB',
+        },
+      },
     },
   }),
   i18n: new VueI18n({

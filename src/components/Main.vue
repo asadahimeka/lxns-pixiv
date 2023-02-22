@@ -2,6 +2,20 @@
 import dayjs from 'dayjs'
 import { getWindowHeight, getWindowWidth } from '@/utils/screen'
 import request from '@/utils/request'
+import {
+  mdiClose,
+  mdiMagnify,
+  mdiFilter,
+  mdiCalendar,
+  mdiShareVariant,
+  mdiOpenInNew,
+  mdiEye,
+  mdiHeart,
+  mdiLink,
+  mdiDownload,
+  mdiOpenInApp,
+  mdiArrowUp,
+} from '@mdi/js'
 
 export default {
   name: 'MainContainer',
@@ -13,6 +27,18 @@ export default {
     },
   },
   data: () => ({
+    mdiClose,
+    mdiMagnify,
+    mdiFilter,
+    mdiCalendar,
+    mdiShareVariant,
+    mdiOpenInNew,
+    mdiEye,
+    mdiHeart,
+    mdiLink,
+    mdiDownload,
+    mdiOpenInApp,
+    mdiArrowUp,
     drawer: null,
     page: 1,
     loading: true,
@@ -43,6 +69,7 @@ export default {
     session: localStorage.getItem('session'),
     r18: false,
     isPageInit: true,
+    showPopPreview: false,
     fullRankModes: [
       { value: 'day', text: '日榜' },
       { value: 'week', text: '周榜' },
@@ -58,6 +85,19 @@ export default {
       { value: 'week_r18', text: 'R18 周' },
       { value: 'week_r18g', text: 'R18G 周 ' },
       { value: 'day_r18_ai', text: 'R18 AI' },
+    ],
+    usersIri: '',
+    usersIriTags: [
+      { value: '', text: 'users入り' },
+      { value: '30000users入り', text: '30000users入り' },
+      { value: '20000users入り', text: '20000users入り' },
+      { value: '10000users入り', text: '10000users入り' },
+      { value: '7500users入り', text: '7500users入り' },
+      { value: '5000users入り', text: '5000users入り' },
+      { value: '1000users入り', text: '1000users入り' },
+      { value: '500users入り', text: '500users入り' },
+      { value: '250users入り', text: '250users入り' },
+      { value: '100users入り', text: '100users入り' },
     ],
     masonryCols: {
       300: 1,
@@ -80,9 +120,11 @@ export default {
     },
   },
   mounted() {
+    this.loading = true
     request
       .get(`/rank?page=1&date=${this.date}&mode=${this.mode}`)
       .then(res => {
+        this.loading = false
         if (res.data.code === -1) {
           this.errorContent = this.$i18n.t('errorContent.needLogin')
           this.loaded = true
@@ -95,6 +137,9 @@ export default {
           this.list = res.data.illusts
           this.isPageInit = false
         }
+      }).catch(err => {
+        console.log('err: ', err)
+        this.loading = false
       })
     this.$emit('getValue', { headerSrc: null })
     this.handleResize()
@@ -120,6 +165,7 @@ export default {
         if (this.page == 1) this.isPageInit = false
         return
       }
+      if (this.showPopPreview) return
       if (this.loading || this.loaded || !isIntersecting) return
       this.loading = true
       this.page += 1
@@ -170,9 +216,11 @@ export default {
       this.filter = false
       this.filterPanel = []
       this.clearContent()
+      this.loading = true
       request
         .get(`/rank?page=${this.page}&date=${this.date}&mode=${this.mode}`)
         .then(res => {
+          this.loading = false
           this.list = res.data.illusts
           if (res.data.illusts?.length > 0) {
             this.list = res.data.illusts
@@ -180,14 +228,24 @@ export default {
             this.errorContent = this.$i18n.t('errorContent.failedGetRankOfDay')
             this.loaded = true
           }
+        }).catch(err => {
+          console.log('err: ', err)
+          this.loading = false
         })
     },
     searchTerm() {
       this.clearContent()
+      this.loading = true
+      let word = this.searchContent
+      if (this.usersIri) word += ` ${this.usersIri}`
       request
-        .get(`/search?word=${this.searchContent}&order=${this.dateSort}&mode=${this.searchType}&page=1`)
+        .get(`/${this.showPopPreview ? 'popular_preview' : 'search'}?word=${word}&order=${this.dateSort}&mode=${this.searchType}&page=1`)
         .then(res => {
+          this.loading = false
           this.list = res.data.illusts
+        }).catch(err => {
+          console.log('err: ', err)
+          this.loading = false
         })
     },
     filterExpand() {
@@ -236,7 +294,7 @@ export default {
           style="float: right; right: 96px; top: -48px;"
           @click="backToRank"
         >
-          <v-icon>mdi-close</v-icon>
+          <v-icon>{{ mdiClose }}</v-icon>
         </v-btn>
         <v-btn
           absolute
@@ -246,7 +304,7 @@ export default {
           :disabled="!searchContent"
           @click="searchTerm"
         >
-          <v-icon>mdi-magnify</v-icon>
+          <v-icon>{{ mdiMagnify }}</v-icon>
         </v-btn>
         <v-btn
           absolute
@@ -256,27 +314,45 @@ export default {
           :color="filter ? 'pink' : ''"
           @click="filterExpand"
         >
-          <v-icon>mdi-filter</v-icon>
+          <v-icon>{{ mdiFilter }}</v-icon>
         </v-btn>
       </v-toolbar>
       <v-expansion-panels v-model="filterPanel" flat hover multiple>
         <v-expansion-panel :key="1">
           <v-expansion-panel-content>
             <v-row>
-              <v-col cols="12" sm="6" md="6">
+              <v-col cols="12" sm="6" md="6" lg="4">
                 <p>{{ $i18n.t('dateSort') }}</p>
                 <v-radio-group v-model="dateSort" :mandatory="false">
                   <v-radio :label="$i18n.t('dateSortDesc')" value="date_desc" />
                   <v-radio :label="$i18n.t('dateSortAsc')" value="date_asc" />
                 </v-radio-group>
               </v-col>
-              <v-col cols="12" sm="6" md="6">
+              <v-col cols="12" sm="6" md="6" lg="4">
                 <p>{{ $i18n.t('searchType') }}</p>
                 <v-radio-group v-model="searchType" :mandatory="false">
                   <v-radio :label="$i18n.t('partialMatchForTags')" value="partial_match_for_tags" />
                   <v-radio :label="$i18n.t('exactMatchForTags')" value="exact_match_for_tags" />
                   <v-radio :label="$i18n.t('titleAndCaption')" value="title_and_caption" />
                 </v-radio-group>
+              </v-col>
+              <v-col v-if="searchContent" cols="12" sm="6" md="6" lg="4">
+                <v-switch
+                  v-model="showPopPreview"
+                  class="mt-2 mr-5"
+                  label="Popular Preview"
+                  :disabled="!!usersIri"
+                  @change="searchTerm"
+                />
+                <v-select
+                  v-model="usersIri"
+                  solo
+                  hide-details
+                  label="users入り"
+                  :items="usersIriTags"
+                  :disabled="showPopPreview"
+                  @change="searchTerm"
+                />
               </v-col>
             </v-row>
           </v-expansion-panel-content>
@@ -298,8 +374,7 @@ export default {
           <v-text-field
             v-model="date"
             class="mt-0 pt-0 ml-5"
-            style="max-width: 25%;"
-            prepend-icon="mdi-calendar"
+            :prepend-icon="mdiCalendar"
             hide-details
             readonly
             solo
@@ -328,16 +403,16 @@ export default {
           style="position: absolute; width: 100%; z-index: 1; background-color: rgba(0,0,0,0) !important; box-shadow: none;"
         >
           <v-btn icon dark @click="dialog = false, pageId = 0">
-            <v-icon>mdi-close</v-icon>
+            <v-icon>{{ mdiClose }}</v-icon>
           </v-btn>
           <v-toolbar-title>{{ $i18n.t('illustInfo') }}</v-toolbar-title>
           <v-spacer />
           <v-btn icon dark @click="share = true, shareId = list[dialogId].id">
-            <v-icon>mdi-share-variant</v-icon>
+            <v-icon>{{ mdiShareVariant }}</v-icon>
           </v-btn>
-          <v-btn icon dark @click="toPath(`/artworks/${list[dialogId].id}`)">
-            <v-icon>mdi-open-in-new</v-icon>
-          </v-btn>
+          <!-- <v-btn icon dark @click="toPath(`/artworks/${list[dialogId].id}`)">
+            <v-icon>{{ mdiOpenInNew }}</v-icon>
+          </v-btn> -->
         </v-toolbar>
         <v-row>
           <v-carousel
@@ -413,7 +488,7 @@ export default {
               <template #activator="{ on }">
                 <v-chip class="ma-2" v-on="on">
                   <v-avatar left>
-                    <v-icon>mdi-eye</v-icon>
+                    <v-icon>{{ mdiEye }}</v-icon>
                   </v-avatar>
                   {{ list[dialogId].total_view }}
                 </v-chip>
@@ -424,7 +499,7 @@ export default {
               <template #activator="{ on }">
                 <v-chip class="ma-2" v-on="on">
                   <v-avatar left>
-                    <v-icon>mdi-heart</v-icon>
+                    <v-icon>{{ mdiHeart }}</v-icon>
                   </v-avatar>
                   {{ list[dialogId].total_bookmarks }}
                 </v-chip>
@@ -434,7 +509,7 @@ export default {
           </div>
           <v-card-subtitle>{{ list[dialogId].create_date }}</v-card-subtitle>
           <v-divider />
-          <v-list-item @click="toPath(`/users/${list[dialogId].user.id}`)">
+          <v-list-item>
             <v-list-item-avatar size="48">
               <v-img
                 class="grey lighten-2"
@@ -453,21 +528,21 @@ export default {
     <v-bottom-sheet v-if="shareId !== 0" v-model="share" inset>
       <v-list>
         <v-subheader>{{ $i18n.t('shareTo') }}</v-subheader>
-        <v-list-item @click="share = false, copyToClipboard(`https://lxns.pixiv.pics/artworks/${shareId}`)">
+        <v-list-item @click="share = false, copyToClipboard(`https://pixiv.pics/artworks/${shareId}`)">
           <v-list-item-avatar>
             <v-avatar size="32px" tile>
-              <v-icon>mdi-link</v-icon>
+              <v-icon>{{ mdiLink }}</v-icon>
             </v-avatar>
           </v-list-item-avatar>
           <v-list-item-title>{{ $i18n.t('copyLink') }}</v-list-item-title>
-          <v-list-item-subtitle>https://lxns.pixiv.pics/artworks/{{ shareId }}</v-list-item-subtitle>
+          <v-list-item-subtitle>https://pixiv.pics/artworks/{{ shareId }}</v-list-item-subtitle>
         </v-list-item>
         <v-list-item
           @click="share = false, toUrl(`https://lxns.org/proxy.php?type=pixiv&dl=true&link=${list[dialogId].meta_single_page.original_image_url}`)"
         >
           <v-list-item-avatar>
             <v-avatar size="32px" tile>
-              <v-icon>mdi-download</v-icon>
+              <v-icon>{{ mdiDownload }}</v-icon>
             </v-avatar>
           </v-list-item-avatar>
           <v-list-item-title>{{ $i18n.t('save') }}</v-list-item-title>
@@ -484,12 +559,12 @@ export default {
             v-if="r18 || (!r18 && !item.x_restrict)"
             :key="i"
             class="mb-3"
-            style="min-height: 100px;max-height: 60vh;"
           >
             <v-img
               :src="`https://lxns.org/proxy.php?type=pixiv&link=${item.image_urls.medium}`"
               :aspect-ratio="item.width / item.height"
               class="white--text align-end"
+              style="min-height: 100px;max-height: 60vh;"
               gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
             >
               <v-card-title v-text="item.title" />
@@ -509,8 +584,7 @@ export default {
             <v-card-actions>
               <v-chip
                 v-if="item.x_restrict"
-                class="ma-2"
-                style="margin: 0 !important;"
+                class="ma-0 mx-1"
                 color="red"
                 text-color="white"
               >
@@ -518,8 +592,7 @@ export default {
               </v-chip>
               <v-chip
                 v-if="item.illust_ai_type == 2"
-                class="ma-2"
-                style="margin: 0 !important;"
+                class="ma-0 mx-1"
                 color="red"
                 text-color="white"
               >
@@ -527,14 +600,14 @@ export default {
               </v-chip>
               <v-spacer />
               <v-btn icon @click.stop="share = true, shareId = item.id, dialogId = i">
-                <v-icon>mdi-share-variant</v-icon>
+                <v-icon>{{ mdiShareVariant }}</v-icon>
               </v-btn>
               <v-btn icon @click.stop="dialog = true, dialogId = i">
-                <v-icon>mdi-open-in-app</v-icon>
+                <v-icon>{{ mdiOpenInApp }}</v-icon>
               </v-btn>
-              <v-btn icon @click.stop="toPath(`/artworks/${item.id}`)">
-                <v-icon>mdi-open-in-new</v-icon>
-              </v-btn>
+              <!-- <v-btn icon @click.stop="toPath(`/artworks/${item.id}`)">
+                <v-icon>{{ mdiOpenInNew }}</v-icon>
+              </v-btn> -->
             </v-card-actions>
           </v-card>
         </template>
@@ -562,7 +635,7 @@ export default {
           easing: 'easeInOutCubic',
         })"
       >
-        <v-icon>mdi-arrow-up</v-icon>
+        <v-icon>{{ mdiArrowUp }}</v-icon>
       </v-btn>
     </v-fab-transition>
     <div

@@ -1,7 +1,16 @@
 <script>
+import {
+  mdiHome,
+  mdiInformation,
+  mdiCog,
+} from '@mdi/js'
+
 export default {
   name: 'App',
   data: () => ({
+    mdiHome,
+    mdiInformation,
+    mdiCog,
     drawer: null,
     headerSrc: null,
     proxyUrl: 'https://lxns.org/proxy.php?type=pixiv&header=image/png&link=',
@@ -16,21 +25,17 @@ export default {
   },
   methods: {
     getValueFunc(text) { // 子部件传参
-      if (text.headerSrc !== null)
-        this.headerSrc = text.headerSrc
+      if (text.headerSrc !== null) { this.headerSrc = text.headerSrc }
 
-      if (text.session !== null)
-        this.session = text.session
+      if (text.session !== null) { this.session = text.session }
 
       if (text.clearSession !== null) {
-        if (text.clearSession === true)
-          this.session = null
+        if (text.clearSession === true) { this.session = null }
       }
     },
     toPath(path) {
       this.headerSrc = null
-      if (this.$route.path !== path)
-        this.$router.push({ path })
+      if (this.$route.path !== path) { this.$router.push({ path }) }
     },
     darkMode() {
       localStorage.setItem('darkMode', (!this.isDark).toString())
@@ -43,7 +48,8 @@ export default {
 <template>
   <div id="app">
     <v-app
-      id="inspire" v-touch="{
+      id="inspire"
+      v-touch="{
         right: () => drawer = true,
         left: () => drawer = false,
       }"
@@ -72,10 +78,11 @@ export default {
         >
           <v-list-item-group color="primary">
             <v-list-item
-              link @click="toPath('/')"
+              link
+              @click="toPath('/')"
             >
               <v-list-item-icon>
-                <v-icon>mdi-home</v-icon>
+                <v-icon>{{ mdiHome }}</v-icon>
               </v-list-item-icon>
 
               <v-list-item-content>
@@ -83,10 +90,11 @@ export default {
               </v-list-item-content>
             </v-list-item>
             <v-list-item
-              link @click="toPath('/about')"
+              link
+              @click="toPath('/about')"
             >
               <v-list-item-icon>
-                <v-icon>mdi-information</v-icon>
+                <v-icon>{{ mdiInformation }}</v-icon>
               </v-list-item-icon>
 
               <v-list-item-content>
@@ -94,10 +102,11 @@ export default {
               </v-list-item-content>
             </v-list-item>
             <v-list-item
-              link @click="toPath('/settings')"
+              link
+              @click="toPath('/settings')"
             >
               <v-list-item-icon>
-                <v-icon>mdi-cog</v-icon>
+                <v-icon>{{ mdiCog }}</v-icon>
               </v-list-item-icon>
 
               <v-list-item-content>
@@ -130,7 +139,7 @@ export default {
           v-if="!headerSrc"
           app
           elevate-on-scroll
-          :color="$vuetify.theme.dark ? '' : 'blue darken-3'"
+          :color="$vuetify.theme.dark ? '' : 'deep-purple lighten-1'"
           dark
           height="56px"
         >

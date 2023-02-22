@@ -1,9 +1,11 @@
 <script>
 import Axios from 'axios'
+import { mdiEarth } from '@mdi/js'
 
 export default {
   name: 'Settings',
   data: () => ({
+    mdiEarth,
     selectLang: 3,
     dialog: false,
     r18Dialog: false,
@@ -17,34 +19,18 @@ export default {
     session: null,
   }),
   mounted() {
-    if (localStorage.getItem('r18') !== null)
-      this.r18 = localStorage.getItem('r18') === 'true'
-    else
-      localStorage.setItem('r18', 'false')
+    if (localStorage.getItem('r18') !== null) { this.r18 = localStorage.getItem('r18') === 'true' } else { localStorage.setItem('r18', 'false') }
 
-    if (localStorage.getItem('session') !== null)
-      this.session = localStorage.getItem('session')
+    if (localStorage.getItem('session') !== null) { this.session = localStorage.getItem('session') }
 
-    if (localStorage.getItem('locale') === 'zhHans')
-      this.selectLang = 0
-    else if (localStorage.getItem('locale') === 'zhHant')
-      this.selectLang = 1
-    else if (localStorage.getItem('locale') === 'ja')
-      this.selectLang = 2
+    if (localStorage.getItem('locale') === 'zhHans') { this.selectLang = 0 } else if (localStorage.getItem('locale') === 'zhHant') { this.selectLang = 1 } else if (localStorage.getItem('locale') === 'ja') { this.selectLang = 2 }
   },
   methods: {
     darkMode() {
       localStorage.setItem('darkMode', this.$vuetify.theme.dark)
     },
     changeLang() {
-      if (this.selectLang === 0)
-        localStorage.setItem('locale', 'zhHans')
-      else if (this.selectLang === 1)
-        localStorage.setItem('locale', 'zhHant')
-      else if (this.selectLang === 2)
-        localStorage.setItem('locale', 'ja')
-      else
-        localStorage.setItem('locale', 'en')
+      if (this.selectLang === 0) { localStorage.setItem('locale', 'zhHans') } else if (this.selectLang === 1) { localStorage.setItem('locale', 'zhHant') } else if (this.selectLang === 2) { localStorage.setItem('locale', 'ja') } else { localStorage.setItem('locale', 'en') }
 
       this.$i18n.locale = localStorage.getItem('locale')
       this.dialog = false
@@ -52,18 +38,14 @@ export default {
     r18DialogFunc(action) {
       if (action === true) {
         localStorage.setItem('r18', 'true')
-      }
-      else {
-        if (this.r18 === true)
-          this.r18Dialog = true
-        else
-          localStorage.setItem('r18', 'false')
+      } else {
+        if (this.r18 === true) { this.r18Dialog = true } else { localStorage.setItem('r18', 'false') }
       }
     },
     loginSubmit() {
       Axios
         .post('https://pixiv-api.lxns.org/login.php', `username=${this.loginAccount}&password=${this.loginPassword}`, undefined)
-        .then((res) => {
+        .then(res => {
           if (res.data.status === 'success') {
             localStorage.setItem('session', res.data.session)
             this.session = res.data.session
@@ -179,7 +161,7 @@ export default {
         <v-list-item-group>
           <v-list-item @click="dialog = true">
             <v-list-item-icon>
-              <v-icon>mdi-earth</v-icon>
+              <v-icon>{{ mdiEarth }}</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>{{ $i18n.t('settings.language') }}</v-list-item-title>

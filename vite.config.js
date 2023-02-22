@@ -2,6 +2,7 @@ import { URL, fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
 import Vue2 from '@vitejs/plugin-vue2'
 import { createHtmlPlugin as Html } from 'vite-plugin-html'
+import { viteExternalsPlugin as Externals } from 'vite-plugin-externals'
 import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vitejs.dev/config/
@@ -16,9 +17,26 @@ export default defineConfig({
   },
   plugins: [
     Vue2(),
+    Externals({
+      vue: 'Vue',
+      vuetify: 'Vuetify',
+    }, { disableInServe: true }),
     Html({
       minify: true,
       entry: 'src/main.js',
+      inject: {
+        data: {
+          cdnCss: [
+            'https://cdn.staticfile.org/normalize/8.0.1/normalize.min.css',
+            'https://cdn.staticfile.org/vuetify/2.6.14/vuetify.min.css',
+            'https://fonts.loli.net/css?family=Roboto:100,300,400,500,700,900',
+          ],
+          cdnJs: [
+            'https://cdn.staticfile.org/vue/2.6.14/vue.min.js',
+            'https://cdn.staticfile.org/vuetify/2.6.14/vuetify.min.js',
+          ],
+        },
+      },
     }),
     VitePWA({
       registerType: 'autoUpdate',
@@ -27,7 +45,7 @@ export default defineConfig({
       manifest: {
         name: 'PixivLxns',
         short_name: 'PixivLxns',
-        theme_color: '#1565c0',
+        theme_color: '#BA68C8',
         icons: [
           {
             src: '192.png',
@@ -49,6 +67,7 @@ export default defineConfig({
       workbox: {
         skipWaiting: true,
         clientsClaim: true,
+        // navigateFallbackDenylist: [],
         runtimeCaching: [
           {
             urlPattern: /.*\.css/,

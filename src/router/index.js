@@ -1,5 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Main from '@/components/Main.vue'
+import About from '@/components/About.vue'
+import Settings from '@/components/Settings.vue'
 
 Vue.use(Router)
 
@@ -9,47 +12,21 @@ export default new Router({
     {
       path: '/',
       name: 'Main',
-      component: () => import('@/components/Main.vue'),
+      component: Main,
       meta: {
         keepAlive: true,
         isBack: false,
       },
     },
-    // {
-    //   path: '/u/:id/',
-    //   redirect: { name: 'Member' },
-    // },
-    // {
-    //   path: '/member/:id/',
-    //   redirect: { name: 'Member' },
-    // },
-    // {
-    //   path: '/users/:id/',
-    //   name: 'Member',
-    //   component: () => import('@/components/Member.vue'),
-    // },
-    // {
-    //   path: '/i/:id/',
-    //   redirect: { name: 'Illust' },
-    // },
-    // {
-    //   path: '/illust/:id/',
-    //   redirect: { name: 'Illust' },
-    // },
-    // {
-    //   path: '/artworks/:id/',
-    //   name: 'Illust',
-    //   component: () => import('@/components/Illust.vue'),
-    // },
     {
-      path: '/about/',
+      path: '/about',
       name: 'About',
-      component: () => import('@/components/About.vue'),
+      component: About,
     },
     {
-      path: '/settings/',
+      path: '/settings',
       name: 'Settings',
-      component: () => import('@/components/Settings.vue'),
+      component: Settings,
     },
   ],
 })
