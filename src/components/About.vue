@@ -12,7 +12,7 @@ export default {
         Pixiv Lxns
       </p>
       <p class="subtitle-1" style="margin: 0;">
-        Modified by <a href="https://github.com/asadahimeka" target="_blank">asadahimeka</a>
+        Modified from <a href="https://pixiv.lxns.org" target="_blank">pixiv.lxns.org</a> by <a href="https://github.com/asadahimeka" target="_blank">asadahimeka</a>
       </p>
     </v-card>
   </v-main>
