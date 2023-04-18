@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const request = axios.create({
-  baseURL: 'https://hibi2.cocomi.cf/api/pixiv',
+  baseURL: 'https://hibi.cocomi.cf/api/pixiv',
   timeout: 20000,
   headers: { 'Content-Type': 'application/json' },
 })
