@@ -27,13 +27,13 @@ export default defineConfig({
       inject: {
         data: {
           cdnCss: [
-            'https://cdn.staticfile.org/normalize/8.0.1/normalize.min.css',
-            'https://cdn.staticfile.org/vuetify/2.6.14/vuetify.min.css',
+            'https://lib.baomitu.com/normalize/8.0.1/normalize.min.css',
+            'https://lib.baomitu.com/vuetify/2.6.14/vuetify.min.css',
             'https://fonts.loli.net/css?family=Roboto:100,300,400,500,700,900',
           ],
           cdnJs: [
-            'https://cdn.staticfile.org/vue/2.6.14/vue.min.js',
-            'https://cdn.staticfile.org/vuetify/2.6.14/vuetify.min.js',
+            'https://lib.baomitu.com/vue/2.6.14/vue.min.js',
+            'https://lib.baomitu.com/vuetify/2.6.14/vuetify.min.js',
           ],
         },
       },
