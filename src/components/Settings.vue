@@ -23,14 +23,32 @@ export default {
 
     if (localStorage.getItem('session') !== null) { this.session = localStorage.getItem('session') }
 
-    if (localStorage.getItem('locale') === 'zhHans') { this.selectLang = 0 } else if (localStorage.getItem('locale') === 'zhHant') { this.selectLang = 1 } else if (localStorage.getItem('locale') === 'ja') { this.selectLang = 2 }
+    if (localStorage.getItem('locale') === 'zhHans') {
+      this.selectLang = 0
+    } else if (localStorage.getItem('locale') === 'zhHant') {
+      this.selectLang = 1
+    } else if (localStorage.getItem('locale') === 'ja') {
+      this.selectLang = 2
+    } else if (localStorage.getItem('locale') === 'ru') {
+      this.selectLang = 4
+    }
   },
   methods: {
     darkMode() {
       localStorage.setItem('darkMode', this.$vuetify.theme.dark)
     },
     changeLang() {
-      if (this.selectLang === 0) { localStorage.setItem('locale', 'zhHans') } else if (this.selectLang === 1) { localStorage.setItem('locale', 'zhHant') } else if (this.selectLang === 2) { localStorage.setItem('locale', 'ja') } else { localStorage.setItem('locale', 'en') }
+      if (this.selectLang === 0) {
+        localStorage.setItem('locale', 'zhHans')
+      } else if (this.selectLang === 1) {
+        localStorage.setItem('locale', 'zhHant')
+      } else if (this.selectLang === 2) {
+        localStorage.setItem('locale', 'ja')
+      } else if (this.selectLang === 4) {
+        localStorage.setItem('locale', 'ru')
+      } else {
+        localStorage.setItem('locale', 'en')
+      }
 
       this.$i18n.locale = localStorage.getItem('locale')
       this.dialog = false
@@ -192,6 +210,11 @@ export default {
                   <v-list-item>
                     <v-list-item-content>
                       <v-list-item-title>English</v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                  <v-list-item>
+                    <v-list-item-content>
+                      <v-list-item-title>Русский</v-list-item-title>
                     </v-list-item-content>
                   </v-list-item>
                 </v-list-item-group>

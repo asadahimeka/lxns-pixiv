@@ -12,6 +12,7 @@ import zhHans from './locale/zh-Hans.json'
 import zhHant from './locale/zh-Hant.json'
 import en from './locale/en.json'
 import ja from './locale/ja.json'
+import ru from './locale/ru.json'
 
 Vue.config.productionTip = false
 Vue.use(VueI18n)
@@ -28,6 +29,8 @@ if (localStorage.getItem('locale') !== null) {
     localStorage.setItem('locale', 'zhHant')
   } else if (navigator.language === 'ja-JP') {
     localStorage.setItem('locale', 'ja')
+  } else if (navigator.language.toLowerCase().includes('ru')) {
+    localStorage.setItem('locale', 'ru')
   } else {
     localStorage.setItem('locale', 'en')
   }
@@ -83,6 +86,7 @@ new Vue({
       zhHant,
       en,
       ja,
+      ru,
     },
   }),
 })

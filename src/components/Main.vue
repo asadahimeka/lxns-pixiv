@@ -71,20 +71,20 @@ export default {
     isPageInit: true,
     showPopPreview: false,
     fullRankModes: [
-      { value: 'day', text: '日榜' },
-      { value: 'week', text: '周榜' },
-      { value: 'month', text: '月榜' },
-      { value: 'day_male', text: '男性向' },
-      { value: 'day_female', text: '女性向' },
-      { value: 'week_original', text: '原创' },
-      { value: 'week_rookie', text: '新人' },
-      { value: 'day_ai', text: 'AI' },
-      { value: 'day_r18', text: 'R18 日' },
-      { value: 'day_male_r18', text: 'R18 男' },
-      { value: 'day_female_r18', text: 'R18 女' },
-      { value: 'week_r18', text: 'R18 周' },
-      { value: 'week_r18g', text: 'R18G 周 ' },
-      { value: 'day_r18_ai', text: 'R18 AI' },
+      { value: 'day', text: this.$i18n.t('dailyRank') },
+      { value: 'week', text: this.$i18n.t('weeklyRank') },
+      { value: 'month', text: this.$i18n.t('monthlyRank') },
+      { value: 'day_male', text: this.$i18n.t('dayMale') },
+      { value: 'day_female', text: this.$i18n.t('dayFemale') },
+      { value: 'week_original', text: this.$i18n.t('Avqv926ZEzla9sEX14EXY') },
+      { value: 'week_rookie', text: this.$i18n.t('weekRookie') },
+      { value: 'day_ai', text: this.$i18n.t('qZuCI2yQ4ZooYDMg5pMbo') },
+      { value: 'day_r18', text: this.$i18n.t('fVt1dMrvHDZhYhoQWdejT') },
+      { value: 'day_male_r18', text: this.$i18n.t('wMNRDl5p5AEfAJEb4BB_d') },
+      { value: 'day_female_r18', text: this.$i18n.t('KgtU57BnBgVObo2shf7_x') },
+      { value: 'week_r18', text: this.$i18n.t('1hFldDIFOPKDg-5Aep3Ke') },
+      { value: 'week_r18g', text: this.$i18n.t('mdykp8O7z-r_xDSPCEkhf') },
+      { value: 'day_r18_ai', text: this.$i18n.t('uEDtwWQ6VmwJqSpg6y6lm') },
     ],
     usersIri: '',
     usersIriTags: [
@@ -528,14 +528,14 @@ export default {
     <v-bottom-sheet v-if="shareId !== 0" v-model="share" inset>
       <v-list>
         <v-subheader>{{ $i18n.t('shareTo') }}</v-subheader>
-        <v-list-item @click="share = false, copyToClipboard(`https://pixiv.pics/artworks/${shareId}`)">
+        <v-list-item @click="share = false, copyToClipboard(`https://pixiv.pictures/artworks/${shareId}`)">
           <v-list-item-avatar>
             <v-avatar size="32px" tile>
               <v-icon>{{ mdiLink }}</v-icon>
             </v-avatar>
           </v-list-item-avatar>
           <v-list-item-title>{{ $i18n.t('copyLink') }}</v-list-item-title>
-          <v-list-item-subtitle>https://pixiv.pics/artworks/{{ shareId }}</v-list-item-subtitle>
+          <v-list-item-subtitle>https://pixiv.pictures/artworks/{{ shareId }}</v-list-item-subtitle>
         </v-list-item>
         <v-list-item
           @click="share = false, toUrl(`https://lxns.org/proxy.php?type=pixiv&dl=true&link=${list[dialogId].meta_single_page.original_image_url}`)"
